@@ -2,13 +2,16 @@ package sttp.tapir.server.akkahttp
 
 import akka.event.LoggingAdapter
 import org.slf4j.LoggerFactory
+import sttp.tapir.Defaults
+import sttp.tapir.TapirFile
 import sttp.tapir.model.ServerRequest
 import sttp.tapir.server.interceptor._
-import sttp.tapir.server.interceptor.log.{DefaultServerLog, ServerLog}
-import sttp.tapir.{Defaults, TapirFile}
+import sttp.tapir.server.interceptor.log.DefaultServerLog
 
 import scala.annotation.nowarn
-import scala.concurrent.{ExecutionContext, Future, blocking}
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
+import scala.concurrent.blocking
 
 case class AkkaHttpServerOptions(
     createFile: ServerRequest => Future[TapirFile],
@@ -38,7 +41,7 @@ object AkkaHttpServerOptions {
     Future(blocking(Defaults.deleteFile()(file)))
   }
 
-  val defaultSlf4jServerLog: ServerLog[Future] = {
+  val defaultSlf4jServerLog: DefaultServerLog[Future] = {
     val log = LoggerFactory.getLogger(AkkaHttpServerInterpreter.getClass)
 
     def debugLog(msg: String, exOpt: Option[Throwable]): Future[Unit] = Future.successful {
